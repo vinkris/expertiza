@@ -10,7 +10,10 @@ class ImpersonateController < ApplicationController
      
   end
  
-  def impersonate        
+  def impersonate 
+    # default error message
+    message = "No user exists with the name '#{params[:user][:name]}'"
+    
     begin
        # Initial impersonation
        if params[:impersonate].nil?
@@ -22,7 +25,7 @@ class ImpersonateController < ApplicationController
              AuthController.clear_user_info(session, nil)
              session[:user] = user
           else   
-             flash[:error] = "No user exists with the name '#{params[:user][:name]}'"
+             flash[:error] = message
              raise
           end
        else
@@ -32,8 +35,8 @@ class ImpersonateController < ApplicationController
              if user
                AuthController.clear_user_info(session, nil)
                session[:user] = user          
-             else         
-               flash[:error] = "No user exists with the name '#{params[:user][:name]}'"
+             else    
+               flash[:error] = message
                raise
              end                  
           # Revert to original account
